@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteNote } from '../services/noteService';
+import { createNote } from '../services/noteService';
+import type { NewNote } from '../services/noteService';
 
-export const useDeleteNote = () => {
+export const useCreateNote = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => deleteNote(id),
+    mutationFn: (note: NewNote) => createNote(note),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
     },

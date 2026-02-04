@@ -7,7 +7,6 @@ import css from './App.module.css';
 
 import { useState } from 'react';
 import { useNotes } from '../../hooks/useNotes';
-import { useDeleteNote } from '../../hooks/useDeleteNote';
 import { useDebouncedCallback } from 'use-debounce';
 
 export default function App() {
@@ -28,12 +27,6 @@ export default function App() {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
-  const deleteNoteMutation = useDeleteNote();
-
-  const handleDelete = (id: string) => {
-    deleteNoteMutation.mutate(id);
-  };
 
   return (
     <div className={css.app}>
@@ -58,12 +51,15 @@ export default function App() {
         )}
       </header>
 
-      <NoteList
-        notes={data?.results || []}
-        isLoading={isLoading}
-        isError={isError}
-        onDelete={handleDelete}
-      />
+      {data?.notes && data.notes.length > 0 && (
+        <NoteList
+          notes={data?.notes || []}
+          isLoading={isLoading}
+          isError={isError}
+        />
+      )}
+
+      {data && data.notes.length === 0 && !isLoading && <p>No notes found</p>}
     </div>
   );
 }
